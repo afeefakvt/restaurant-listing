@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Restaurant } from '../types/Restaurant';
 import { useNavigate } from 'react-router-dom';
 import { getRestaurants } from '../api/restaurantApi';
+import { deleteRestaurant } from '../api/restaurantApi';
 
 const RestaurantList = () => {
 
@@ -29,7 +30,7 @@ const RestaurantList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const [restaurantToDelete, setRestaurantToDelete] = useState<number | null>(null);
+  const [restaurantToDelete, setRestaurantToDelete] = useState<string | null>(null);
 
   const navigate = useNavigate()
 
@@ -53,6 +54,38 @@ const RestaurantList = () => {
       }
   }
 
+  const handleAddNew = ()=>{
+    navigate('/add')
+  }
+
+
+  const handleEdit = (id:string)=>{
+    navigate(`/edit/${id}`)
+  }
+
+  const handleDeleteClick = (id:string)=>{
+    setRestaurantToDelete(id)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async()=>{
+    if(restaurantToDelete){
+      try {
+        await deleteRestaurant(restaurantToDelete)
+        setDeleteDialogOpen(false)
+        fetchRestaurants()
+      } catch (error) {
+        setError('Failed to delete restaurant');
+        console.error(error);
+        
+      }
+    }
+  }
+
+  const handleDeleteCancel = ()=>{
+    setDeleteDialogOpen(false)
+    setRestaurantToDelete(null)
+  }
 
   
   if (loading) return <Typography>Loading restaurants...</Typography>;
@@ -85,7 +118,7 @@ const RestaurantList = () => {
           <TableBody>
             {restaurants.length > 0 ? (
               restaurants.map((restaurant) => (
-                <TableRow key={restaurant.id}>
+                <TableRow key={restaurant._id}>
                   <TableCell>{restaurant.name}</TableCell>
                   <TableCell>{restaurant.address}</TableCell>
                   <TableCell>{restaurant.contact}</TableCell>
@@ -93,13 +126,13 @@ const RestaurantList = () => {
                   <TableCell align="right">
                     <IconButton 
                       color="primary" 
-                      onClick={() => restaurant.id && handleEdit(restaurant.id)}
+                      onClick={() => handleEdit(restaurant._id)}
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton 
                       color="error" 
-                      onClick={() => restaurant.id && handleDeleteClick(restaurant.id)}
+                      onClick={() => handleDeleteClick(restaurant._id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -117,7 +150,6 @@ const RestaurantList = () => {
         </Table>
       </TableContainer>
 
-      {/* Delete confirmation dialog */}
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteCancel}

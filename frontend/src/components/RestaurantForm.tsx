@@ -11,6 +11,7 @@ import {
     Alert
   } from '@mui/material';
   import { Restaurant } from '../types/Restaurant';
+  import { getRestaurantById ,updateRestaurant,createRestaurant} from '../api/restaurantApi';
 
 
   interface RestaurantFormProps {
@@ -23,6 +24,7 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
     const { id } = useParams<{ id: string }>();
     
     const initialState: Restaurant = {
+        _id:"",
         name: '',
         address: '',
         contact: '',
@@ -36,11 +38,11 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
   
     useEffect(() => {
       if (isEditMode && id) {
-        fetchRestaurant(parseInt(id));
+        fetchRestaurant(id);
       }
     }, [isEditMode, id]);
   
-    const fetchRestaurant = async (restaurantId: number) => {
+    const fetchRestaurant = async (restaurantId: string) => {
       try {
         setLoading(true);
         const data = await getRestaurantById(restaurantId);
@@ -69,7 +71,7 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
         setError(null);
         
         if (isEditMode && id) {
-          await updateRestaurant(parseInt(id), restaurant);
+          await updateRestaurant(id, restaurant);
           setSuccess('Restaurant updated successfully!');
         } else {
           await createRestaurant(restaurant);
