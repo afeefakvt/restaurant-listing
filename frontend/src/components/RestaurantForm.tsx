@@ -11,6 +11,7 @@ import {
   } from '@mui/material';
   import { Restaurant } from '../types/Restaurant';
   import { getRestaurantById ,updateRestaurant,createRestaurant} from '../api/restaurantApi';
+  import { validateRestaurantForm } from '../utils/validation';
 
 
   interface RestaurantFormProps {
@@ -22,19 +23,23 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const numericId = id ? parseInt(id) : undefined;
-    
-    const initialState: Restaurant = {
-        id:0,
-        name: '',
-        address: '',
-        contact: '',
 
+    const initialState: Omit<Restaurant, 'id'> = {
+      name: '',
+      address: '',
+      contact: '',
     };
   
-    const [restaurant, setRestaurant] = useState<Restaurant>(initialState);
+    const [restaurant, setRestaurant] = useState(initialState);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+
+    const [validationErrors, setValidationErrors] = useState({
+      name: '',
+      address: '',
+      contact: '',
+    });
   
     useEffect(() => {
       if (isEditMode && numericId) {
@@ -64,8 +69,17 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
       }));
     };
   
+
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
+
+      const {isValid,errors} = validateRestaurantForm(restaurant)
+      setValidationErrors(errors)
+
+      if(!isValid){
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
@@ -102,22 +116,20 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
       <Box component="form" onSubmit={handleSubmit}>
-        {/* Restaurant Name */}
         <Box sx={{ mb: 2 }}>
           <TextField
-            required
             fullWidth
             label="Restaurant Name"
             name="name"
             value={restaurant.name}
             onChange={handleChange}
+            error={!!validationErrors.name}
+            helperText={validationErrors.name}
           />
         </Box>
 
-        {/* Address */}
         <Box sx={{ mb: 2 }}>
           <TextField
-            required
             fullWidth
             label="Address"
             name="address"
@@ -125,22 +137,23 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
             onChange={handleChange}
             multiline
             rows={2}
+            error={!!validationErrors.address}
+            helperText={validationErrors.address}
           />
         </Box>
 
-        {/* Contact */}
         <Box sx={{ mb: 2 }}>
           <TextField
-            required
             fullWidth
             label="Contact Number"
             name="contact"
             value={restaurant.contact}
             onChange={handleChange}
+            error={!!validationErrors.contact}
+            helperText={validationErrors.contact}
           />
         </Box>
 
-        {/* Buttons */}
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
           <Button variant="outlined" onClick={() => navigate('/')}>
             Cancel

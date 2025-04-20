@@ -14,7 +14,7 @@ function App() {
         <Toolbar>
           <RestaurantIcon sx={{ mr: 2 }} />
           <Typography variant="h6" component="div">
-            Restaurant Listing App
+            Resto - A Restaurant Listing App
           </Typography>
         </Toolbar>
       </AppBar>

@@ -15,7 +15,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  TablePagination,TextField
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -31,6 +32,10 @@ const RestaurantList = () => {
   const [error, setError] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [restaurantToDelete, setRestaurantToDelete] = useState<number | null>(null);
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
   const navigate = useNavigate()
 
@@ -87,6 +92,25 @@ const RestaurantList = () => {
     setRestaurantToDelete(null)
   }
 
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const filteredRestaurants = restaurants.filter((restaurant) =>
+    restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    restaurant.address.toLowerCase().includes(searchTerm.toLowerCase()) 
+  );
+
+  const paginatedRestaurants = filteredRestaurants.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   
   if (loading) return <Typography>Loading restaurants...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -105,6 +129,15 @@ const RestaurantList = () => {
         </Button>
       </Box>
 
+      <TextField
+        label="Search"
+        variant="outlined"
+        fullWidth
+        sx={{ marginBottom: 2 }}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -116,8 +149,8 @@ const RestaurantList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {restaurants.length > 0 ? (
-              restaurants.map((restaurant) => (
+            {paginatedRestaurants.length > 0 ? (
+              paginatedRestaurants.map((restaurant) => (
                 <TableRow key={restaurant.id}>
                   <TableCell>{restaurant.name}</TableCell>
                   <TableCell>{restaurant.address}</TableCell>
@@ -149,6 +182,16 @@ const RestaurantList = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <TablePagination
+        component="div"
+        count={filteredRestaurants.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+
 
       <Dialog
         open={deleteDialogOpen}
