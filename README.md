@@ -10,12 +10,6 @@ A web application to explore, add, and manage restaurants in various locations.
 - Add, edit, and delete restaurant listings (for logged-in users)
 - Responsive UI for desktop and mobile
 
-## 📸 Screenshots
-
-<!-- Add image links here -->
-![Homepage Screenshot](screenshots/homepage.png)
-![Restaurant Details](screenshots/restaurant-details.png)
-
 ## 🛠️ Tech Stack
 
 **Frontend:**
