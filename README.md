@@ -40,7 +40,7 @@ A web application to explore, add, and manage restaurants in various locations.
 git clone https://github.com/afeefakvt/restaurant-listing/tree/main
 ```
 ```bash
-cd machine task
+cd Machine task
 ```
 
 2. **Setup Frontend**
