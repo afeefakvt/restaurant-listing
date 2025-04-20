@@ -30,7 +30,7 @@ const RestaurantList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
-  const [restaurantToDelete, setRestaurantToDelete] = useState<string | null>(null);
+  const [restaurantToDelete, setRestaurantToDelete] = useState<number | null>(null);
 
   const navigate = useNavigate()
 
@@ -59,11 +59,11 @@ const RestaurantList = () => {
   }
 
 
-  const handleEdit = (id:string)=>{
+  const handleEdit = (id:number)=>{
     navigate(`/edit/${id}`)
   }
 
-  const handleDeleteClick = (id:string)=>{
+  const handleDeleteClick = (id:number)=>{
     setRestaurantToDelete(id)
     setDeleteDialogOpen(true)
   }
@@ -118,7 +118,7 @@ const RestaurantList = () => {
           <TableBody>
             {restaurants.length > 0 ? (
               restaurants.map((restaurant) => (
-                <TableRow key={restaurant._id}>
+                <TableRow key={restaurant.id}>
                   <TableCell>{restaurant.name}</TableCell>
                   <TableCell>{restaurant.address}</TableCell>
                   <TableCell>{restaurant.contact}</TableCell>
@@ -126,13 +126,13 @@ const RestaurantList = () => {
                   <TableCell align="right">
                     <IconButton 
                       color="primary" 
-                      onClick={() => handleEdit(restaurant._id)}
+                      onClick={() => handleEdit(restaurant.id)}
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton 
                       color="error" 
-                      onClick={() => handleDeleteClick(restaurant._id)}
+                      onClick={() => handleDeleteClick(restaurant.id)}
                     >
                       <DeleteIcon />
                     </IconButton>

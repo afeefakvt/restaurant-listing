@@ -7,8 +7,7 @@ import {
     Typography,
     Paper,
     CircularProgress,
-    Grid,
-    Alert
+    Alert,
   } from '@mui/material';
   import { Restaurant } from '../types/Restaurant';
   import { getRestaurantById ,updateRestaurant,createRestaurant} from '../api/restaurantApi';
@@ -22,9 +21,10 @@ import {
 const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
+    const numericId = id ? parseInt(id) : undefined;
     
     const initialState: Restaurant = {
-        _id:"",
+        id:0,
         name: '',
         address: '',
         contact: '',
@@ -37,12 +37,12 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
     const [success, setSuccess] = useState<string | null>(null);
   
     useEffect(() => {
-      if (isEditMode && id) {
-        fetchRestaurant(id);
+      if (isEditMode && numericId) {
+        fetchRestaurant(numericId);
       }
-    }, [isEditMode, id]);
+    }, [isEditMode, numericId]);
   
-    const fetchRestaurant = async (restaurantId: string) => {
+    const fetchRestaurant = async (restaurantId: number) => {
       try {
         setLoading(true);
         const data = await getRestaurantById(restaurantId);
@@ -70,8 +70,8 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
         setLoading(true);
         setError(null);
         
-        if (isEditMode && id) {
-          await updateRestaurant(id, restaurant);
+        if (isEditMode && numericId) {
+          await updateRestaurant(numericId, restaurant);
           setSuccess('Restaurant updated successfully!');
         } else {
           await createRestaurant(restaurant);
@@ -92,70 +92,70 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
     };
   
     if (loading && isEditMode) return <CircularProgress />;
-  
     return (
       <Box component={Paper} sx={{ p: 3, maxWidth: 600, mx: 'auto', mt: 4 }}>
-        <Typography variant="h5" component="h2" gutterBottom>
-          {isEditMode ? 'Edit Restaurant' : 'Add New Restaurant'}
-        </Typography>
-        
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
-        
-        <Box component="form" onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                label="Restaurant Name"
-                name="name"
-                value={restaurant.name}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                label="Address"
-                name="address"
-                value={restaurant.address}
-                onChange={handleChange}
-                multiline
-                rows={2}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label="Contact Number"
-                name="contact"
-                value={restaurant.contact}
-                onChange={handleChange}
-              />
-            </Grid>
-           
-            <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-              <Button 
-                variant="outlined" 
-                onClick={() => navigate('/')}
-              >
-                Cancel
-              </Button>
-              <Button 
-                type="submit" 
-                variant="contained" 
-                color="primary"
-                disabled={loading}
-              >
-                {loading ? <CircularProgress size={24} /> : isEditMode ? 'Update' : 'Add'}
-              </Button>
-            </Grid>
-          </Grid>
+      <Typography variant="h5" component="h2" gutterBottom>
+        {isEditMode ? 'Edit Restaurant' : 'Add New Restaurant'}
+      </Typography>
+
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+
+      <Box component="form" onSubmit={handleSubmit}>
+        {/* Restaurant Name */}
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            required
+            fullWidth
+            label="Restaurant Name"
+            name="name"
+            value={restaurant.name}
+            onChange={handleChange}
+          />
+        </Box>
+
+        {/* Address */}
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            required
+            fullWidth
+            label="Address"
+            name="address"
+            value={restaurant.address}
+            onChange={handleChange}
+            multiline
+            rows={2}
+          />
+        </Box>
+
+        {/* Contact */}
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            required
+            fullWidth
+            label="Contact Number"
+            name="contact"
+            value={restaurant.contact}
+            onChange={handleChange}
+          />
+        </Box>
+
+        {/* Buttons */}
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+          <Button variant="outlined" onClick={() => navigate('/')}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} /> : isEditMode ? 'Update' : 'Add'}
+          </Button>
         </Box>
       </Box>
-    );
-  };
+    </Box>
+    )
+  }
   export default RestaurantForm;

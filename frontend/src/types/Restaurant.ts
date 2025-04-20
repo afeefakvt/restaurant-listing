@@ -1,5 +1,5 @@
 export interface Restaurant{
-    _id:string;
+    id:number;
     name:string;
     address:string;
     contact:string

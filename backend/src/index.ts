@@ -3,11 +3,10 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import restaurantRoutes from './routes/restaurantRoutes'
 import  sequelize  from '../config/db'
-import '../models'
+import models from '../models'
 
 
 const app:Application = express()
-const port = process.env.PORT
 
 dotenv.config()
 
@@ -33,7 +32,7 @@ app.get('/',(req,res)=>{
     res.send('hello')
 })
 
-
+const port = process.env.PORT
 app.listen(port,()=>{
     console.log(`Server is running on port: ${port}`);
     
