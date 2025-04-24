@@ -29,3 +29,4 @@ export const updateRestaurant = async(id:number,restaurant:Omit<Restaurant,"id">
 export const deleteRestaurant = async(id:number):Promise<void>=>{
     await API.delete(`/deleteRestaurant/${id}`)
 }
+

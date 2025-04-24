@@ -35,7 +35,8 @@ const RestaurantList = () => {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(4);
+
 
   const navigate = useNavigate()
 
@@ -112,13 +113,14 @@ const RestaurantList = () => {
   );
 
   
+  
   if (loading) return <Typography>Loading restaurants...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
   return (
     <Box sx={{ width: '100%', padding: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
         <Typography variant="h5" component="h2">
-          Restaurants
+          Restaurants 
         </Typography>
         <Button 
           variant="contained" 
