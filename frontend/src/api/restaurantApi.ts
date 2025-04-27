@@ -6,9 +6,7 @@ const API = axios.create({
 })
 
 export const getRestaurants = async():Promise<Restaurant[]>=>{
-    const response = await API.get('/restaurants')
-    console.log(response.data,"rrrrrrrrr");
-    
+    const response = await API.get('/restaurants')    
     return response.data
 }
 

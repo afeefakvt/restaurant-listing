@@ -1,6 +1,5 @@
 import { Sequelize } from "sequelize"
 
-
 const username = process.env.DB_USER || 'postgres';
 const password=process.env.DB_PASS || 'postgres';
 const database=process.env.DB_NAME || 'restaurants';
