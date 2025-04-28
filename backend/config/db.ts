@@ -8,6 +8,12 @@ const host=process.env.DB_HOST || 'localhost';
 const sequelize = new Sequelize(database,username,password,{
     host:host,
     dialect:'postgres',
+    dialectOptions:{
+        ssl:{
+            require:true,
+            rejectUnauthorized: false,
+        }
+    },
     logging:false,
     define:{
         timestamps:true
