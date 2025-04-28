@@ -27,7 +27,8 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "node dist/src/index.js",
     "build": "tsc",
-    "migrate": "sequelize db:migrate"
+    "migrate": "sequelize db:migrate --env production",
+    "deploy": "npm run migrate && npm start"
   },
   "author": "",
   "license": "ISC",
