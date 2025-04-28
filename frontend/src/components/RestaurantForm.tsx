@@ -12,6 +12,7 @@ import {
   import { Restaurant } from '../types/Restaurant';
   import { getRestaurantById ,updateRestaurant,createRestaurant} from '../api/restaurantApi';
   import { validateRestaurantForm } from '../utils/validation';
+import axios from 'axios';
 
 
   interface RestaurantFormProps {
@@ -98,7 +99,11 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({ isEditMode = false }) =
         }, 1500);
         
       } catch (err) {
-        setError(isEditMode ? 'Failed to update restaurant' : 'Failed to add restaurant');
+        if (axios.isAxiosError(err) && err.response) {
+          setError(err.response.data.message || 'Something went wrong');
+        } else {
+          setError(isEditMode ? 'Failed to update restaurant' : 'Failed to add restaurant');
+        }
         console.error(err);
       } finally {
         setLoading(false);

@@ -39,11 +39,13 @@ Restaurant.init(
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique:true
     },
     contact: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique:true
     }
   },
   {
